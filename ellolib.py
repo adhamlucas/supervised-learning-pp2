@@ -35,8 +35,6 @@ class Perceptron:
     number_of_weights_adjust = 0
     while(error):
       print("------ Epoch {} ------".format(epoch))
-      print("### Weights {}".format(self.__weights))
-      print("### Weights Adjust {}".format(number_of_weights_adjust))
       epoch += 1
       erros_count = 0
 
@@ -51,6 +49,10 @@ class Perceptron:
           erros_count += 1
           number_of_weights_adjust += 1
           self.__weights = self.adjust_weights(x_enter, result, expected_result)
+          print("### Weights {}".format(self.__weights))
+
+      print("### Weights Adjust {}".format(number_of_weights_adjust))
+
       if(erros_count == 0):
         error = False
     
@@ -79,8 +81,8 @@ class Perceptron:
     tirthy_percenty = round(dataset_len_row * 0.3)
     seventy_percenty = round(dataset_len_row * 0.7)
 
-    training_idx = np.random.randint(self.__dataset.shape[0], size=seventy_percenty)
-    test_idx = np.random.randint(self.__dataset.shape[0], size=tirthy_percenty)
+    training_idx = np.random.randint(dataset_len_row, size=seventy_percenty)
+    test_idx = np.random.randint(dataset_len_row, size=tirthy_percenty)
 
     training, test = self.__dataset[training_idx,:], self.__dataset[test_idx,:]
     x_training = np.array((training[0:,:2]))
@@ -92,7 +94,7 @@ class Perceptron:
 
   def generate_hyperplane(self):
     if(not self.__fit):
-      raise NoFitError(self.__fit, "Error: Perceptron isn't trained") 
+      raise NoFitError(self.__fit, "Error: Perceptron isn't trained")
     x_coord = self.__weights[0] / self.__weights[2]
     y_coord = self.__weights[1] / self.__weights[2] * self.__bias
     return (x_coord, y_coord)
@@ -126,9 +128,10 @@ class Perceptron:
 
 
 if __name__ == "__main__":
-  file = np.fromfile("./rna-2020.1-pp2-data/dataAll.txt")
+  file = np.fromfile("./rna-2020.1-pp2-data/data2.txt")
   file = file.reshape((int(file.shape[0] / 3), 3))
   conjunto_treinamento_aula = np.array([[2,2,1], [4, 4, 0]])
   b = Perceptron(dataset=file)
-  #b.fit()
+  b.fit()
+  print("## reta")
   print(b.generate_hyperplane())
