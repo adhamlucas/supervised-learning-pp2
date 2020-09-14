@@ -36,6 +36,7 @@ class Perceptron:
     while(error):
       print("------ Epoch {} ------".format(epoch))
       print("### Weights {}".format(self.__weights))
+      print("### Weights Adjust {}".format(number_of_weights_adjust))
       epoch += 1
       erros_count = 0
 
@@ -50,7 +51,6 @@ class Perceptron:
           erros_count += 1
           number_of_weights_adjust += 1
           self.__weights = self.adjust_weights(x_enter, result, expected_result)
-
       if(erros_count == 0):
         error = False
     
