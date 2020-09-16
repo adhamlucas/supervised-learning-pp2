@@ -106,27 +106,17 @@ class Perceptron:
     def generate_hyperplane(self):
         if(not self.__fit):
             raise NoFitError(self.__fit, "Error: Perceptron isn't trained")
-
-        first_point_x = 0
-        first_point_y = self.__weights[0] / self.__weights[2] + self.__weights[1] / self.__weights[2] * first_point_x
-        first_point = (first_point_x, first_point_y)
-
-        second_point_y = 0
-        second_point_x = -(self.__weights[0] / self.__weights[2]) + self.__weights[1] / self.__weights[2]
-        second_point = (second_point_x, second_point_y)
-
-        return (first_point, second_point)
-
-    def generate_hyperplane_test(self):
+        
         slope = -(self.__weights[0] / self.__weights[2]) / (self.__weights[0] / self.__weights[1])
         intercept = -(self.__weights[0] / self.__weights[2])
         
         x_min = np.amin(self.__x_training[:,:1])
         x_max = np.amax(self.__x_training[:,:1])
-        y_min = (slope + x_min) + intercept
-        y_max = (slope + x_max) + intercept
 
-        return ((x_min, y_min), (x_max, y_max))
+        x = np.linspace(x_min,x_max)
+        #y =mx+c, m is slope and c is inte
+        y = [(slope * i) + intercept for i in x]
+        return (x, y)
 
     @property
     def degree(self):
