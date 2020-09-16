@@ -106,9 +106,16 @@ class Perceptron:
     def generate_hyperplane(self):
         if(not self.__fit):
             raise NoFitError(self.__fit, "Error: Perceptron isn't trained")
-        x_coord = self.__weights[0] / self.__weights[2]
-        y_coord = self.__weights[1] / self.__weights[2] * self.__bias
-        return (x_coord, y_coord)
+
+        first_point_x = 0
+        first_point_y = self.__weights[0] / self.__weights[2] + self.__weights[1] / self.__weights[2] * first_point_x
+        first_point = (first_point_x, first_point_y)
+
+        second_point_y = 0
+        second_point_x = -(self.__weights[0] / self.__weights[2]) + self.__weights[1] / self.__weights[2]
+        second_point = (second_point_x, second_point_y)
+
+        return (first_point, second_point)
 
     @property
     def degree(self):
@@ -147,7 +154,7 @@ if __name__ == "__main__":
     file = np.fromfile("./rna-2020.1-pp2-data/dataAll.txt")
     file = file.reshape((int(file.shape[0] / 3), 3))
     conjunto_treinamento_aula = np.array([[2, 2, 1], [4, 4, 0]])
-    b = Perceptron(dataset=file)
+    b = Perceptron(dataset=conjunto_treinamento_aula)
     b.fit()
     print("## reta")
     print(b.generate_hyperplane())
