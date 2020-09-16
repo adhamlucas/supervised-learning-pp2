@@ -67,6 +67,39 @@ class Perceptron:
             '-' * 30, number_of_weights_adjust))
         self.__fit = True
 
+        def fit2(self,epoch):
+            error = True
+            cont = 0
+            number_of_rows = self.__x_training.shape[0]
+            number_of_weights_adjust = 0
+            while(error):
+                print("------ Epoch {} ------".format(epoch))
+                cont += 1
+                erros_count = 0
+
+                for index in range(number_of_rows):
+                    x_enter = np.insert(self.__x_training[index], 0, self.__bias)
+                    u = (x_enter * self.__weights).sum()
+
+                    result = self.activation_function(u)
+                    expected_result = self.__y_training[index]
+
+                    if(result != expected_result):
+                        erros_count += 1
+                        number_of_weights_adjust += 1
+                        self.__weights = self.adjust_weights(
+                            x_enter, result, expected_result)
+                        print("### Weights {}".format(self.__weights))
+
+                print("### Weights Adjust {}".format(number_of_weights_adjust))
+
+                if(cont == epoch):
+                    self.__number_of_weights_adjust = number_of_weights_adjust
+                    self.__number_of_epochs = epoch
+                    error = False
+                    
+        self.__fit = True
+
     def activation_function(self, value):
         return (1 if value >= self.__degree else 0)
 
