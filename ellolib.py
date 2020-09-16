@@ -151,6 +151,7 @@ class Perceptron:
         return self.__number_of_epochs
 
 
+
 if __name__ == "__main__":
     file = np.fromfile("./rna-2020.1-pp2-data/dataAll.txt")
     file = file.reshape((int(file.shape[0] / 3), 3))
@@ -158,9 +159,7 @@ if __name__ == "__main__":
     b = Perceptron(dataset=file)
     b.fit()
     print("## reta")
-    print(b.generate_hyperplane_test())
     print(b.x_training.shape[0])
-
 
 def questao_2():
     file = np.fromfile("./rna-2020.1-pp2-data/data2.txt")
@@ -169,16 +168,20 @@ def questao_2():
     learn_taxs = [0.4, 0.1, 0.01]
     weights = [[-100,  100], [-1,  1], [-0.5,  0.5]]
 
-    results = []
+    results = {}
 
     for tax in learn_taxs:
         for weight in weights:
+            key = str(tax) + str(weight)
+            results[key] = []
+            print(key)
+
             for i in range(0, 101):
                 b = Perceptron(
                     dataset=file, weight_random_seed=weight, learn_tax=tax)
                 b.fit()
 
-                results.append({
+                results[key].append({
                     'hyperplane': b.generate_hyperplane(),
                     'number_of_weights_adjust': b.number_of_weights_adjust,
                     'number_of_epochs': b.number_of_epochs
