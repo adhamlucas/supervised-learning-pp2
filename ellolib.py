@@ -117,6 +117,17 @@ class Perceptron:
 
         return (first_point, second_point)
 
+    def generate_hyperplane_test(self):
+        slope = -(self.__weights[0] / self.__weights[2]) / (self.__weights[0] / self.__weights[1])
+        intercept = -(self.__weights[0] / self.__weights[2])
+        
+        x_min = np.amin(self.__x_training[:,:1])
+        x_max = np.amax(self.__x_training[:,:1])
+        y_min = (slope + x_min) + intercept
+        y_max = (slope + x_max) + intercept
+
+        return ((x_min, y_min), (x_max, y_max))
+
     @property
     def degree(self):
         return self.__degree
@@ -154,16 +165,17 @@ if __name__ == "__main__":
     file = np.fromfile("./rna-2020.1-pp2-data/dataAll.txt")
     file = file.reshape((int(file.shape[0] / 3), 3))
     conjunto_treinamento_aula = np.array([[2, 2, 1], [4, 4, 0]])
-    b = Perceptron(dataset=conjunto_treinamento_aula)
+    b = Perceptron(dataset=file)
     b.fit()
     print("## reta")
-    print(b.generate_hyperplane())
+    print(b.generate_hyperplane_test())
     print(b.x_training.shape[0])
 
 
 def questao_2():
     file = np.fromfile("./rna-2020.1-pp2-data/data2.txt")
     file = file.reshape((int(file.shape[0] / 3), 3))
+    print(file)
     learn_taxs = [0.4, 0.1, 0.01]
     weights = [[-100,  100], [-1,  1], [-0.5,  0.5]]
 
