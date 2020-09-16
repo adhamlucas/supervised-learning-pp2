@@ -67,37 +67,29 @@ class Perceptron:
             '-' * 30, number_of_weights_adjust))
         self.__fit = True
 
-        def fit2(self,epoch):
-            error = True
-            cont = 0
-            number_of_rows = self.__x_training.shape[0]
-            number_of_weights_adjust = 0
-            while(error):
-                print("------ Epoch {} ------".format(epoch))
-                cont += 1
-                erros_count = 0
+    def fit2(self,epoch):
+        cont = 0
+        number_of_rows = self.__x_training.shape[0]
+        number_of_weights_adjust = 0
 
-                for index in range(number_of_rows):
-                    x_enter = np.insert(self.__x_training[index], 0, self.__bias)
-                    u = (x_enter * self.__weights).sum()
+        for cont in range(epoch):
+            print("------ Epoch {} ------".format(cont+1))
+            for index in range(number_of_rows):
+                x_enter = np.insert(self.__x_training[index], 0, self.__bias)
+                u = (x_enter * self.__weights).sum()
 
-                    result = self.activation_function(u)
-                    expected_result = self.__y_training[index]
+                result = self.activation_function(u)
+                expected_result = self.__y_training[index]
 
-                    if(result != expected_result):
-                        erros_count += 1
-                        number_of_weights_adjust += 1
-                        self.__weights = self.adjust_weights(
-                            x_enter, result, expected_result)
-                        print("### Weights {}".format(self.__weights))
-
-                print("### Weights Adjust {}".format(number_of_weights_adjust))
-
-                if(cont == epoch):
-                    self.__number_of_weights_adjust = number_of_weights_adjust
-                    self.__number_of_epochs = epoch
-                    error = False
-                    
+                if(result != expected_result):
+                    number_of_weights_adjust += 1
+                    self.__weights = self.adjust_weights(
+                        x_enter, result, expected_result)
+                    print("### Weights {}".format(self.__weights))
+            print("### Weights Adjust {}".format(number_of_weights_adjust))
+            
+        self.__number_of_weights_adjust = number_of_weights_adjust
+        self.__number_of_epochs = epoch
         self.__fit = True
 
     def activation_function(self, value):
@@ -186,13 +178,13 @@ class Perceptron:
 
 
 if __name__ == "__main__":
-    file = np.fromfile("./rna-2020.1-pp2-data/dataAll.txt")
+    file = np.fromfile("./rna-2020.1-pp2-data/dataHoldout.txt")
     file = file.reshape((int(file.shape[0] / 3), 3))
     conjunto_treinamento_aula = np.array([[2, 2, 1], [4, 4, 0]])
-    b = Perceptron(dataset=file)
-    b.fit()
-    print("## reta")
-    print(b.x_training.shape[0])
+    b = Perceptron(dataset=file,split="holdout")
+    b.fit2(100)
+    # print("## reta")
+    # print(b.x_training.shape[0])
 
 def questao_2():
     file = np.fromfile("./rna-2020.1-pp2-data/data2.txt")
