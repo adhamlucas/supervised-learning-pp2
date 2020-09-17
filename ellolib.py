@@ -210,12 +210,8 @@ class Perceptron:
         x_max = np.amax(self.__x_training[:,:1])
 
         x = np.linspace(x_min,x_max)
-        print(x)
-        print(slope)
-        print(intercept)
         #y =mx+c, m is slope and c is inte
         y = [(slope * i) - intercept for i in x]
-        print(y)
         return (x, y)
         
     @property
