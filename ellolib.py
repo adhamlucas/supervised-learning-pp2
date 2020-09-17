@@ -210,10 +210,14 @@ class Perceptron:
         x_max = np.amax(self.__x_training[:,:1])
 
         x = np.linspace(x_min,x_max)
+        print(x)
+        print(slope)
+        print(intercept)
         #y =mx+c, m is slope and c is inte
-        y = [(slope * i) + intercept for i in x]
+        y = [(slope * i) - intercept for i in x]
+        print(y)
         return (x, y)
-
+        
     @property
     def degree(self):
         return self.__degree
@@ -249,7 +253,7 @@ class Perceptron:
 
 
 if __name__ == "__main__":
-    file = np.fromfile("./rna-2020.1-pp2-data/dataHoldout.txt")
+    file = np.fromfile("./rna-2020.1-pp2-data/data2.txt")
     file = file.reshape((int(file.shape[0] / 3), 3))
     conjunto_treinamento_aula = np.array([[2, 2, 1], [4, 4, 0]])
     b = Perceptron(dataset=file,split="holdout")
