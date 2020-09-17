@@ -25,8 +25,7 @@ class Perceptron:
         self.__learn_tax = learn_tax
         self.__degree = degree
         self.__bias = bias
-        self.__x_training, self.__y_training, self.__x_test, self.__y_test = self.generate_train_test_dataset(
-            split)
+        self.__x_training, self.__y_training, self.__x_test, self.__y_test = self.generate_train_test_dataset(split)
         self.__weights = self.generate_weights(weight_random_seed)
         self.__fit = False
         self.__number_of_weights_adjust = 0
@@ -91,6 +90,78 @@ class Perceptron:
         self.__number_of_weights_adjust = number_of_weights_adjust
         self.__number_of_epochs = epoch
         self.__fit = True
+
+    def predict(self):
+        number_of_rows = self.__x_test.shape[0]
+        results = np.array([], np.int)
+        for index in range(number_of_rows):
+            x_enter = np.insert(self.__x_test[index], 0, self.__bias)
+            u = (x_enter * self.__weights).sum()
+            results = np.append(results, self.activation_function(u)) 
+
+        return results
+
+    def get_confusion_matrix(self, reais, preditos, labels):
+        # não implementado
+        if len(labels) > 2:
+            return None
+
+        if len(reais) != len(preditos):
+            return None
+        
+        # considerando a primeira classe como a positiva, e a segunda a negativa
+        true_class = labels[0]
+        negative_class = labels[1]
+
+        # valores preditos corretamente
+        tp = 0
+        tn = 0
+        
+        # valores preditos incorretamente
+        fp = 0
+        fn = 0
+        
+        for (indice, v_real) in enumerate(reais):
+            v_predito = preditos[indice]
+
+            # se trata de um valor real da classe positiva
+            if v_real == true_class:
+                tp += 1 if v_predito == v_real else 0
+                fp += 1 if v_predito != v_real else 0
+            else:
+                tn += 1 if v_predito == v_real else 0
+                fn += 1 if v_predito != v_real else 0
+        
+        return np.array([
+            # valores da classe positiva
+            [ tp, fp ],
+            # valores da classe negativa
+            [ fn, tn ]
+        ])
+
+    def get_accuracy(self, confusion_matrix):
+        tp = confusion_matrix[0][0]
+        tn = confusion_matrix[1][1]
+        fp = confusion_matrix[0][1]
+        fn = confusion_matrix[1][0]
+
+        return ((tp + tn) / (tp+ fp + tn + fn))
+    
+    def get_precision(self, confusion_matrix):
+        tp = confusion_matrix[0][0]
+        fp = confusion_matrix[0][1]
+
+        return (tp / (tp + fp))
+    
+    def get_recall(self, confusion_matrix):
+        tp = confusion_matrix[0][0]
+        fn = confusion_matrix[1][0]
+
+        return (tp / (tp + fn))
+
+    def get_f_score(self, precision, recall):
+        return (2 * (precision * recall) / 
+                    (precision + recall))
 
     def activation_function(self, value):
         return (1 if value >= self.__degree else 0)
@@ -182,7 +253,14 @@ if __name__ == "__main__":
     file = file.reshape((int(file.shape[0] / 3), 3))
     conjunto_treinamento_aula = np.array([[2, 2, 1], [4, 4, 0]])
     b = Perceptron(dataset=file,split="holdout")
+    #b.fit()
     b.fit2(100)
+    confusion_matrix = b.get_confusion_matrix(b.y_test, b.predict(), [0, 1])
+    accuracy = b.get_accuracy(confusion_matrix)
+    precision = b.get_precision(confusion_matrix)
+    recall = b.get_recall(confusion_matrix)
+    f_score = b.get_f_score(precision, recall)
+    print(accuracy, precision, recall, f_score)
     # print("## reta")
     # print(b.x_training.shape[0])
 
